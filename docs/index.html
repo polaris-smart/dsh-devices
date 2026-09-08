@@ -6,7 +6,11 @@
 <title>dsh-devices · DSH 多设备组网插件</title>
 <meta name="description" content="DSH (DeepSeek Harness) 多设备组网插件：mDNS 同网发现、密钥配对、SSH 跨网直连、SFTP 文件传输。一条命令，所有设备变成你的舰队。">
 <style>
-  :root { --bg:#0f1115; --card:#171a21; --border:#232733; --text:#e6e9ef; --muted:#8b93a3; --accent:#4b6fff; --green:#34d399; }
+  :root { --bg:#f6f7f9; --card:#ffffff; --border:#e4e7ec; --text:#1a1d24; --muted:#6b7280; --accent:#4b6fff; --green:#059669; }
+  [data-theme="dark"] { --bg:#0f1115; --card:#171a21; --border:#232733; --text:#e6e9ef; --muted:#8b93a3; --accent:#4b6fff; --green:#34d399; }
+  body { transition:background .2s ease, color .2s ease; }
+  .theme-btn { position:fixed; top:16px; right:16px; z-index:9; width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .theme-btn:hover { border-color:var(--accent); }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
   .wrap { max-width:880px; margin:0 auto; padding:48px 24px 80px; }
@@ -41,6 +45,7 @@
 </style>
 </head>
 <body>
+<button class="theme-btn" id="themeBtn" title="切换深浅主题" aria-label="切换深浅主题">🌙</button>
 <div class="wrap">
 
   <div class="hero">
@@ -94,5 +99,22 @@
     MIT © polaris-smart
   </div>
 </div>
+<script>
+(function () {
+  var btn = document.getElementById('themeBtn');
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    try { localStorage.setItem('dsh-theme', theme); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('dsh-theme'); } catch (e) {}
+  var initial = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  apply(initial);
+  btn.addEventListener('click', function () {
+    apply(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
 </body>
 </html>
